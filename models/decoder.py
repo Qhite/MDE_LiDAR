@@ -21,7 +21,7 @@ def pointwise(in_channels, out_channels):
 class Decoder(nn.Module):
     def __init__(self, cfg=None, channels=[]):
         super(Decoder, self).__init__()
-        self.H, self.W = [228, 304]
+        self.H, self.W = cfg.data.image_size
         self.dim = cfg.model.decoder_dim
         
         self.conv0 = nn.Sequential(
@@ -93,7 +93,7 @@ class Decoder(nn.Module):
 class Decoder_Inter(nn.Module): # Interpolation & Conv
     def __init__(self, cfg=None, channels=[]):
         super(Decoder_Inter, self).__init__()
-        self.H, self.W = [228, 304]
+        self.H, self.W = cfg.data.image_size
         self.dim = cfg.model.decoder_dim
 
 
