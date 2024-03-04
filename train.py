@@ -17,7 +17,7 @@ root_path = args.root_path
 config_yaml = args.config
 
 # Load Config File
-cfg = tools.get_attr(f"{root_path}/MDE/config/{config_yaml}") # Load Train config
+cfg = tools.get_attr(f"{root_path}/MDE_LiDAR/config/{config_yaml}") # Load Train config
 
 # Model Load & Initialization
 model = models.DepthNet(cfg).to(device=cfg.device)

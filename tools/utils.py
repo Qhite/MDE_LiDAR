@@ -54,8 +54,8 @@ def show_metric(metrics):
 def save_model(args, model, DF):
     root_path = args.root_path
     name = str(int(time()))
-    file_n = f"{root_path}/MDE/log/{name}"
+    file_n = f"{root_path}/MDE_LiDAR/log/{name}"
     os.system(f"mkdir -p {file_n}")
-    os.system(f"cp {root_path}/MDE/config/{args.config} {root_path}/MDE/log/{name}")
-    torch.save(model.state_dict(), f"{root_path}/MDE/log/{name}/{name}.pth.tar")
-    DF.to_csv(f"{args.root_path}/MDE/log/{name}/{name}.csv", index=False)
+    os.system(f"cp {root_path}/MDE_LiDAR/config/{args.config} {root_path}/MDE_LiDAR/log/{name}")
+    torch.save(model.state_dict(), f"{root_path}/MDE_LiDAR/log/{name}/{name}.pth.tar")
+    DF.to_csv(f"{args.root_path}/MDE_LiDAR/log/{name}/{name}.csv", index=False)
