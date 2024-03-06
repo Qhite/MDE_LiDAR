@@ -148,4 +148,4 @@ if __name__ == "__main__":
     train()
 
     # Visualization
-    visualization()
+    visualization(test_loader)
