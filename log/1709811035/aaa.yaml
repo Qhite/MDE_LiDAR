@@ -1,0 +1,24 @@
+device: 0
+
+data:
+  image_size: [228, 304]
+  lidar_size: 70
+
+model:
+  backbone: "mobilenetv3_small"
+  bin_size: 512
+  decoder_type: 0 # 0-Trans Conv / 1-Interpolate
+  decoder_dim: 16
+  num_head: 16
+  emb_dim: 256
+
+train: # Adam Optimizer
+  tag: "baseline"
+  batch_size: 40
+  epochs: 20
+  lr: 0.002
+  lr_decay: 0.2
+  weight_decay: 0.0005
+  alpha: 10.0 # SILog Loss Weight
+  beta: 0.1 # Chamfer Loss Weight
+  gamma: 0.1 # MinMax Loss Weight
