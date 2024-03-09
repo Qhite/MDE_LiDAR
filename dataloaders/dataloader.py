@@ -52,7 +52,7 @@ def getTrain_Data(batch_size, root_path, lp):
         Lighting(0.1, __imagenet_pca['eigval'], __imagenet_pca['eigvec']),
         ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4,),
         Normalize(__imagenet_stats["mean"], __imagenet_stats["std"]),
-        Add_LiDAR(lp, 0, 5)
+        Add_LiDAR(lp, 0, 10)
     ])
 
     transform_train = NYUDv2_dataset(root_path=root_path, datalist_file="train", transform=pre_process)

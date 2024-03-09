@@ -52,7 +52,7 @@ def train():
         log_epoch = [epoch+1, 0] # For train logging
 
         model.train()
-        tools.update_lr(optimizer, epoch, cfg, [5, 10, 15])
+        tools.update_lr(optimizer, epoch, cfg)
 
         train_tqdm = tqdm(enumerate(train_loader), total=len(train_loader))
 

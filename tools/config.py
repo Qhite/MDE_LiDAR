@@ -27,6 +27,7 @@ def get_attr(file_name):
     cfg.train.epochs = fyaml["train"]["epochs"]
     cfg.train.lr = fyaml["train"]["lr"]
     cfg.train.lr_decay = fyaml["train"]["lr_decay"]
+    cfg.train.decay_epoch = fyaml["train"]["decay_epoch"]
     cfg.train.weight_decay = fyaml["train"]["weight_decay"]
     cfg.train.alpha = fyaml["train"]["alpha"]
     cfg.train.beta = fyaml["train"]["beta"]

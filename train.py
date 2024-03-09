@@ -54,7 +54,7 @@ def train():
         log_epoch = [epoch+1, 0] # For train logging
 
         model.train()
-        tools.update_lr(optimizer, epoch, cfg, [5, 10, 15])
+        tools.update_lr(optimizer, epoch, cfg)
 
         train_tqdm = tqdm(enumerate(train_loader), total=len(train_loader))
 
@@ -140,7 +140,7 @@ def visualization(data_loader):
             out = to_pil_image(d.squeeze())
             plt.imsave(f"{path}/{i}_{j}_gt.png", out, cmap="magma")
 
-            out = to_pil_image((p-d).abs().squeeze())
+            out = to_pil_image((d-p).squeeze())
             plt.imsave(f"{path}/{i}_{j}_er.png", out, cmap="bwr")
 
 

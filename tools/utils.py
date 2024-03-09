@@ -24,8 +24,8 @@ def to_device(data_dict, device):
     for k in data_dict.keys():
         data_dict[k] = data_dict[k].to(device=device)
 
-def update_lr(optim, epoch, cfg, period=[10]):
-    if epoch in period:
+def update_lr(optim, epoch, cfg):
+    if epoch in cfg.train.decay_epoch:
         for param_group in optim.param_groups:
             param_group['lr'] *= cfg.train.lr_decay
 
