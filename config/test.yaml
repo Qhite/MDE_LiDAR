@@ -13,12 +13,12 @@ model:
   emb_dim: 128
 
 train: # Adam Optimizer
-  tag: "lr_2_Step"
+  tag: "lr_3_Step"
   batch_size: 40
   epochs: 20
   lr: 0.002
   lr_decay: 0.1
-  decay_epoch: [10, 15]
+  decay_epoch: [10, 15, 20]
   weight_decay: 0.0005
   alpha: 10.0 # SILog Loss Weight
   beta: 0.1 # Chamfer Loss Weight
