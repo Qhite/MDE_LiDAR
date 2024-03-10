@@ -2,9 +2,7 @@ import torch
 import models
 import dataloaders
 import tools
-from tqdm import tqdm
 import os
-import pandas as pd
 
 # Get Trained File Path
 args = tools.get_config()
@@ -31,5 +29,10 @@ tools.show_cfg(cfg, model, True)
 Loss = models.Losses(cfg).to(device=cfg.device)
 
 if __name__ == "__main__":
-    path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}-eval"
-    tools.visualization(test_loader, model, path, cfg.device)
+    for i, b in enumerate(test_loader):
+        tools.to_device(b, cfg.device)
+        o, c = model(b)
+        print(c)
+        break
+    # path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}-eval"
+    # tools.visualization(test_loader, model, path, cfg.device)

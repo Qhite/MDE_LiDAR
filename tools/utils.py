@@ -79,6 +79,6 @@ def visualization(data_loader, model, path, device):
             out = to_pil_image(d.squeeze())
             plt.imsave(f"{path}/{i}_{j}_gt.png", out, cmap="magma")
 
-            out = to_pil_image((d.log()-p.log()).abs().squeeze())
+            out = to_pil_image((d-p).squeeze())
             plt.imsave(f"{path}/{i}_{j}_er.png", out, cmap="bwr")
         print(f"{i/len(data_loader)*100:2.2f}%",end="\r")

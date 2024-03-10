@@ -32,6 +32,7 @@ with torch.no_grad():
     print(f" MACs: {macs/1000000000:.2f}G")
 
 test_loader = dataloaders.getTest_Data(batch_size=1, root_path="/root", lp=cfg.data.lidar_size)
+train_loader = dataloaders.getTrain_Data(batch_size=cfg.train.batch_size, root_path="/root", lp=cfg.data.lidar_size)
 
 for batch in tqdm(test_loader):
     tools.to_device(batch, cfg.device)

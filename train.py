@@ -57,15 +57,13 @@ def train():
         train_tqdm = tqdm(enumerate(train_loader), total=len(train_loader))
 
         for i, sample in train_tqdm:
-            break
             tools.to_device(sample, cfg.device)
 
             optimizer.zero_grad()
 
             output, centers = model(sample)
-            target = sample["depth"]
 
-            loss = Loss(output, centers, target)
+            loss = Loss(output, centers, sample)
             loss.backward()
             
             optimizer.step()
@@ -90,17 +88,16 @@ def validate():
     buff_l = torch.zeros(1)
 
     for i, batch in val_tqdm:
-
         tools.to_device(batch, cfg.device)
 
         predict, centers = model(batch)
-        t = batch["depth"].detach()
-        p, c = predict.detach(), centers.detach()
+        t = batch["depth"]
+        p, c = predict, centers
 
         metrics = tools.cal_metric(p * 10, t * 10) # Set Depth unit to meter
         buff_m += metrics
 
-        loss = Loss(p, c.unsqueeze(0), t)
+        loss = Loss(p, c.unsqueeze(0), batch)
         buff_l += loss.cpu()
 
         val_tqdm.set_description(f"Delta_1 {float(buff_m[0]/i):.3f} | RMS {float(buff_m[3]/i):.3f} | REL {float(buff_m[5]/i):.3f} | loss {float(buff_l/i):.3f}")

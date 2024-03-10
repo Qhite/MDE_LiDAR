@@ -14,11 +14,15 @@ class Losses(nn.Module):
         self.SILL = SILogLoss()
         self.BCL = BinsChamferLoss()
         self.MML = MinMaxLoss()
+        self.LL = LiDAR_Loss()
     
-    def forward(self, output, centers, target):
+    def forward(self, output, centers, d_dict):
+        target = d_dict["depth"]
+
         SIL_loss = self.SILL(output, target)
         BC_loss = self.BCL(centers, target)
         MM_loss = self.MML(centers, target)
+        L_loss = self.LL(output, d_dict["lidar"])
 
         loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * BC_loss + self.cfg.train.gamma * MM_loss 
 
@@ -79,9 +83,16 @@ class MinMaxLoss(nn.Module):
         minT = T.min(dim=1)[0]
         return torch.abs(centers[:,-1] - maxT).sum() + torch.abs(centers[:,0] - minT).sum()
     
-class New_Loss(nn.Module):
+class LiDAR_Loss(nn.Module):
     def __init__(self):
-        super(New_Loss, self).__init__()
+        super(LiDAR_Loss, self).__init__()
     
-    def forward(self, center, Lidar):
-        return
+    def forward(self, output, lidar):
+        mid_idx = output.shape[2]
+        mid = output[:, :, mid_idx-3:mid_idx+4, :]
+        mid = F.avg_pool2d(mid, 3, 1).squeeze().unsqueeze(2)
+        ld = lidar.squeeze().unsqueeze(2)
+
+        loss, _ = chamfer_distance(x=ld, y=mid)
+
+        return loss
