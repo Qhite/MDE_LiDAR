@@ -2,7 +2,7 @@ import torchvision
 from .model import DepthNet, DepthNet_Nobins
 from .cross_attention import Cross_Attention_Block
 from .decoder import Decoder, Decoder_Inter
-from .loss import *
+from .loss import Losses
 
 __model_info__ = {
     "mobilenetv2" : [[1, 3, 6, 13, 17], [320, 96, 32, 24, 16]],

@@ -28,9 +28,7 @@ test_loader = dataloaders.getTest_Data(batch_size=1, root_path=root_path, lp=cfg
 tools.show_cfg(cfg, model, True)
 
 # Loss Funtions
-SILL = models.SILogLoss().to(device=cfg.device)
-BCL = models.BinsChamferLoss().to(device=cfg.device)
-MML = models.MinMaxLoss().to(device=cfg.device)
+Loss = models.Losses(cfg).to(device=cfg.device)
 
 if __name__ == "__main__":
     path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}-eval"

@@ -7,6 +7,23 @@ from pytorch3d.loss import chamfer_distance
 
 # Loss functions used in AdaBins paper
 
+class Losses(nn.Module):
+    def __init__(self, cfg):
+        super(Losses, self).__init__()
+        self.cfg = cfg
+        self.SILL = SILogLoss()
+        self.BCL = BinsChamferLoss()
+        self.MML = MinMaxLoss()
+    
+    def forward(self, output, centers, target):
+        SIL_loss = self.SILL(output, target)
+        BC_loss = self.BCL(centers, target)
+        MM_loss = self.MML(centers, target)
+
+        loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * BC_loss + self.cfg.train.gamma * MM_loss 
+
+        return loss
+
 class SILogLoss(nn.Module):  
     def __init__(self, lamb=0.85):
         super(SILogLoss, self).__init__()

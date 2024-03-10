@@ -63,6 +63,7 @@ def save_model(args, model, DF):
     torch.save(model.state_dict(), f"{root_path}/MDE_LiDAR/log/{name}/{name}.pth.tar")
     DF.to_csv(f"{args.root_path}/MDE_LiDAR/log/{name}/{name}.csv", index=False)
 
+@torch.no_grad()
 def visualization(data_loader, model, path, device):
     os.system(f"mkdir -p {path}")
 
@@ -78,5 +79,6 @@ def visualization(data_loader, model, path, device):
             out = to_pil_image(d.squeeze())
             plt.imsave(f"{path}/{i}_{j}_gt.png", out, cmap="magma")
 
-            out = to_pil_image((d-p).squeeze())
+            out = to_pil_image((d.log()-p.log()).abs().squeeze())
             plt.imsave(f"{path}/{i}_{j}_er.png", out, cmap="bwr")
+        print(f"{i/len(data_loader)*100:2.2f}%",end="\r")

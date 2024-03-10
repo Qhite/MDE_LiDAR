@@ -37,9 +37,7 @@ optimizer = torch.optim.Adam([{"params": model.encoder.parameters(), "lr": cfg.t
                              )
 
 # Loss Funtions
-SILL = models.SILogLoss().to(device=cfg.device)
-BCL = models.BinsChamferLoss().to(device=cfg.device)
-MML = models.MinMaxLoss().to(device=cfg.device)
+Loss = models.Losses(cfg).to(device=cfg.device)
 
 # Show Configs
 tools.show_cfg(cfg, model)
@@ -59,6 +57,7 @@ def train():
         train_tqdm = tqdm(enumerate(train_loader), total=len(train_loader))
 
         for i, sample in train_tqdm:
+            break
             tools.to_device(sample, cfg.device)
 
             optimizer.zero_grad()
@@ -66,11 +65,7 @@ def train():
             output, centers = model(sample)
             target = sample["depth"]
 
-            SIL_loss = SILL(output, target)
-            BC_loss = BCL(centers, target)
-            MM_loss = MML(centers, target)
-
-            loss = cfg.train.alpha * SIL_loss + cfg.train.beta * BC_loss + cfg.train.gamma * MM_loss 
+            loss = Loss(output, centers, target)
             loss.backward()
             
             optimizer.step()
@@ -88,33 +83,33 @@ def train():
 
     tools.save_model(args, model, logging)
 
+@torch.no_grad()
 def validate():
-    with torch.no_grad():
-        val_tqdm = tqdm(enumerate(test_loader), total=len(test_loader))
-        buff_m = torch.zeros(7)
-        buff_l = torch.zeros(1)
+    val_tqdm = tqdm(enumerate(test_loader), total=len(test_loader))
+    buff_m = torch.zeros(7)
+    buff_l = torch.zeros(1)
 
-        for i, batch in val_tqdm:
+    for i, batch in val_tqdm:
 
-            tools.to_device(batch, cfg.device)
+        tools.to_device(batch, cfg.device)
 
-            predict, centers = model(batch)
-            t = batch["depth"].detach()
-            p, c = predict.detach(), centers.detach()
+        predict, centers = model(batch)
+        t = batch["depth"].detach()
+        p, c = predict.detach(), centers.detach()
 
-            metrics = tools.cal_metric(p * 10, t * 10) # Set Depth unit to meter
-            buff_m += metrics
+        metrics = tools.cal_metric(p * 10, t * 10) # Set Depth unit to meter
+        buff_m += metrics
 
-            loss = cfg.train.alpha * SILL(p, t).detach() + cfg.train.beta * BCL(c, t).detach() + cfg.train.gamma * MML(c.unsqueeze(0), t).detach()
-            buff_l += loss.cpu()
+        loss = Loss(p, c.unsqueeze(0), t)
+        buff_l += loss.cpu()
 
-            val_tqdm.set_description(f"Delta_1 {float(buff_m[0]/i):.3f} | RMS {float(buff_m[3]/i):.3f} | REL {float(buff_m[5]/i):.3f} | loss {float(buff_l/i):.3f}")
-        
-        avg_loss = (buff_l/len(test_loader)).tolist()
-        avg_errors = (buff_m/len(test_loader)).tolist()
-        avg_loss.extend(avg_errors)
-        
-        tools.show_metric(avg_errors)
+        val_tqdm.set_description(f"Delta_1 {float(buff_m[0]/i):.3f} | RMS {float(buff_m[3]/i):.3f} | REL {float(buff_m[5]/i):.3f} | loss {float(buff_l/i):.3f}")
+    
+    avg_loss = (buff_l/len(test_loader)).tolist()
+    avg_errors = (buff_m/len(test_loader)).tolist()
+    avg_loss.extend(avg_errors)
+    
+    tools.show_metric(avg_errors)
     print("==" * 50)
 
     return avg_loss
