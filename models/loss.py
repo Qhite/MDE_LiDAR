@@ -24,7 +24,8 @@ class Losses(nn.Module):
         MM_loss = self.MML(centers, target)
         L_loss = self.LL(output, d_dict["lidar"])
 
-        loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * BC_loss + self.cfg.train.gamma * MM_loss 
+        # loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * BC_loss + self.cfg.train.gamma * MM_loss
+        loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * L_loss
 
         return loss
 
