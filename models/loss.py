@@ -88,11 +88,17 @@ class LiDAR_Loss(nn.Module):
         super(LiDAR_Loss, self).__init__()
     
     def forward(self, output, lidar):
+        batch_size = output.shape[0]
+
         mid_idx = output.shape[2]
         mid = output[:, :, mid_idx-3:mid_idx+4, :]
-        mid = F.avg_pool2d(mid, 3, 1).squeeze().unsqueeze(2)
-        ld = lidar.squeeze().unsqueeze(2)
+        mid = F.avg_pool2d(mid, 3, 1).squeeze()
+        ld = lidar.squeeze()
 
-        loss, _ = chamfer_distance(x=ld, y=mid)
+        if batch_size == 1:
+            mid = mid.unsqueeze(0)
+            ld = ld.unsqueeze(0)
+
+        loss, _ = chamfer_distance(x=ld.unsqueeze(2), y=mid.unsqueeze(2))
 
         return loss
