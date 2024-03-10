@@ -17,8 +17,8 @@ train: # Adam Optimizer
   batch_size: 40
   epochs: 20
   lr: 0.002
-  lr_decay: 0.2
-  decay_epoch: [5, 10, 15]
+  lr_decay: 0.1
+  decay_epoch: [10]
   weight_decay: 0.0005
   alpha: 10.0 # SILog Loss Weight
   beta: 0.1 # Chamfer Loss Weight

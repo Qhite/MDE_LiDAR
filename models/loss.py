@@ -61,3 +61,10 @@ class MinMaxLoss(nn.Module):
         maxT = T.max(dim=1)[0]
         minT = T.min(dim=1)[0]
         return torch.abs(centers[:,-1] - maxT).sum() + torch.abs(centers[:,0] - minT).sum()
+    
+class New_Loss(nn.Module):
+    def __init__(self):
+        super(New_Loss, self).__init__()
+    
+    def forward(self, center, Lidar):
+        return

@@ -119,33 +119,10 @@ def validate():
 
     return avg_loss
 
-def visualization(data_loader):
-    from torchvision.transforms.functional import to_pil_image
-    import matplotlib.pyplot as plt
-    import os
-    import torch.nn.functional as F
-
-    path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}"
-    os.system(f"mkdir -p {path}")
-
-    for i, batch in tqdm(enumerate(data_loader), total=len(data_loader)):
-        tools.to_device(batch, cfg.device)
-        predict, centers = model(batch)
-        for j, (p, d) in enumerate(zip(predict, batch["depth"])):
-            p = F.interpolate(p.unsqueeze(0), size=[228, 304], mode="nearest")
-            out = to_pil_image(p.squeeze())
-            plt.imsave(f"{path}/{i}_{j}_pr.png", out, cmap="magma")
-
-            d = F.interpolate(d.unsqueeze(0), size=[228, 304], mode="nearest")
-            out = to_pil_image(d.squeeze())
-            plt.imsave(f"{path}/{i}_{j}_gt.png", out, cmap="magma")
-
-            out = to_pil_image((d-p).squeeze())
-            plt.imsave(f"{path}/{i}_{j}_er.png", out, cmap="bwr")
-
 
 if __name__ == "__main__":
     train()
 
     # Visualization
-    visualization(test_loader)
+    path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}"
+    tools.visualization(test_loader, model, path, cfg.device)

@@ -4,6 +4,9 @@ from time import time
 import numpy as np
 import os
 import argparse
+from torchvision.transforms.functional import to_pil_image
+import matplotlib.pyplot as plt
+import torch.nn.functional as F
 
 def get_config():
     parser = argparse.ArgumentParser(description="Get Config yaml File")
@@ -59,3 +62,21 @@ def save_model(args, model, DF):
     os.system(f"cp {root_path}/MDE_LiDAR/config/{args.config} {root_path}/MDE_LiDAR/log/{name}")
     torch.save(model.state_dict(), f"{root_path}/MDE_LiDAR/log/{name}/{name}.pth.tar")
     DF.to_csv(f"{args.root_path}/MDE_LiDAR/log/{name}/{name}.csv", index=False)
+
+def visualization(data_loader, model, path, device):
+    os.system(f"mkdir -p {path}")
+
+    for i, batch in enumerate(data_loader):
+        to_device(batch, device)
+        predict, centers = model(batch)
+        for j, (p, d) in enumerate(zip(predict, batch["depth"])):
+            p = F.interpolate(p.unsqueeze(0), size=[228, 304], mode="nearest")
+            out = to_pil_image(p.squeeze())
+            plt.imsave(f"{path}/{i}_{j}_pr.png", out, cmap="magma")
+
+            d = F.interpolate(d.unsqueeze(0), size=[228, 304], mode="nearest")
+            out = to_pil_image(d.squeeze())
+            plt.imsave(f"{path}/{i}_{j}_gt.png", out, cmap="magma")
+
+            out = to_pil_image((d-p).squeeze())
+            plt.imsave(f"{path}/{i}_{j}_er.png", out, cmap="bwr")
