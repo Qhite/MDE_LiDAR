@@ -32,7 +32,6 @@ if __name__ == "__main__":
     for i, b in enumerate(test_loader):
         tools.to_device(b, cfg.device)
         o, c = model(b)
-        print(c)
         break
-    # path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}-eval"
-    # tools.visualization(test_loader, model, path, cfg.device)
+    path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}-eval"
+    tools.visualization(test_loader, model, path, cfg.device)
