@@ -50,7 +50,7 @@ class RandomHorizontalFlip(object):
         return {'image': image, 'depth': depth, 'lidar': lidar}
     
 class CenterCrop(object):
-    def __init__(self, size_image=[304, 228], size_depth=[152, 114]):
+    def __init__(self, size_image=[304, 228], size_depth=[304, 228]):
         self.size_image = size_image
         self.size_depth = size_depth
 

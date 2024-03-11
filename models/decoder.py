@@ -79,10 +79,10 @@ class Decoder(nn.Module):
         x = self.Trans_conv1(x) + self.skip_conv1(f[-2])
         x = self.res_conv1(x)
 
-        x = F.interpolate(self.Trans_conv2(x), size=[math.ceil(self.H/8), math.ceil(self.W/8)], mode='bilinear', align_corners=True) + self.skip_conv2(f[-3])
+        x = F.interpolate(self.Trans_conv2(x), size=[math.ceil(self.H/8), math.ceil(self.W/8)], mode="nearest") + self.skip_conv2(f[-3])
         x = self.res_conv2(x)
 
-        x = F.interpolate(self.Trans_conv3(x), size=[math.ceil(self.H/4), math.ceil(self.W/4)], mode='bilinear', align_corners=True) + self.skip_conv3(f[-4])
+        x = F.interpolate(self.Trans_conv3(x), size=[math.ceil(self.H/4), math.ceil(self.W/4)], mode="nearest") + self.skip_conv3(f[-4])
         x = self.res_conv3(x)
 
         x = self.Trans_conv4(x) + self.skip_conv4(f[-5])

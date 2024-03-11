@@ -13,7 +13,7 @@ model:
   emb_dim: 128
 
 train: # Adam Optimizer
-  tag: "Normal_Loss_Test_1"
+  tag: "lr_002_decay_0.1"
   batch_size: 40
   epochs: 20
   lr: 0.002

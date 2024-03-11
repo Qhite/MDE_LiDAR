@@ -18,6 +18,8 @@ class Losses(nn.Module):
     
     def forward(self, output, centers, d_dict):
         target = d_dict["depth"]
+        if output.shape[1:] != target.shape[1:]:
+            output = F.interpolate(output, [228, 304], mode="nearest")
 
         SIL_loss = self.SILL(output, target)
         BC_loss = self.BCL(centers, target)
