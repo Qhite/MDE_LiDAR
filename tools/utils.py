@@ -33,6 +33,8 @@ def update_lr(optim, epoch, cfg):
             param_group['lr'] *= cfg.train.lr_decay
 
 def cal_metric(predict, target):
+    if predict.shape[1:] != target[1:]:
+        predict = F.interpolate(predict, [228, 304], mode="nearest")
     mask_pred = torch.gt(predict, 1e-2)
     mask_gt = torch.gt(target, 1e-2)
     mask = torch.logical_and(mask_gt, mask_pred)
