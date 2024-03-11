@@ -116,5 +116,5 @@ if __name__ == "__main__":
     train()
 
     # Visualization
-    path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}"
-    tools.visualization(test_loader, model, path, cfg.device)
+    # path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}"
+    # tools.visualization(test_loader, model, path, cfg.device)
