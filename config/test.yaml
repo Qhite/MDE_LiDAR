@@ -13,7 +13,7 @@ model:
   emb_dim: 128
 
 train: # Adam Optimizer
-  tag: "LiDAR_Loss_Test"
+  tag: "LiDAR_Loss_Test2"
   batch_size: 40
   epochs: 20
   lr: 0.002
