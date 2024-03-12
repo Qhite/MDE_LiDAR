@@ -38,13 +38,12 @@ class Cross_Attention_Block(nn.Module):
         self.W_v = nn.Linear(self.W//4, self.d_model, bias=False)
 
         # Output
-        self.W_o1 = nn.Sequential(nn.Linear(self.d_model, self.W//2),
+        self.W_o1 = nn.Sequential(nn.BatchNorm2d(1),
+                                  nn.Linear(self.d_model, self.W//2),
                                   nn.LeakyReLU(),
                                   )
         
-        self.W_o2 = nn.Sequential(nn.Linear(self.W//2, self.bin_size),
-                                  nn.LeakyReLU(),
-                                  )
+        self.W_o2 = nn.Linear(self.W//2, self.bin_size)
 
     def forward(self, data_dict):
         x, y = data_dict["feature"], data_dict["lidar"]
@@ -69,7 +68,7 @@ class Cross_Attention_Block(nn.Module):
         Concate_Attention_Value = Attention_Value.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
         Q_res = (Q.transpose(1,2).view(batch_size, -1, self.num_head * self.head_dim))
         res = Concate_Attention_Value + Q_res
-        output = F.avg_pool2d(self.W_o1(res), (self.H//4, 1) ).view(batch_size, -1)
+        output = F.avg_pool2d(self.W_o1(res.unsqueeze(1)), (self.H//4, 1)).view(batch_size, -1)
         output = self.W_o2(output)
 
         return output

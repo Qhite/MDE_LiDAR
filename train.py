@@ -63,7 +63,7 @@ def train():
 
             output, centers = model(sample)
 
-            loss = Loss(output, centers, sample)
+            loss = Loss(epoch, output, centers, sample)
             loss.backward()
             
             optimizer.step()
@@ -73,7 +73,7 @@ def train():
             train_tqdm.set_description(f"Epoch {epoch+1:2d}/{Epochs:2d} | Loss {float(buff_l/i):.3f}")
 
         model.eval()
-        val_logging = validate()
+        val_logging = validate(epoch)
 
         log_epoch[1] = float(buff_l/len(train_loader))
         log_epoch.extend(val_logging)
@@ -82,7 +82,7 @@ def train():
     tools.save_model(args, model, logging)
 
 @torch.no_grad()
-def validate():
+def validate(epoch):
     val_tqdm = tqdm(enumerate(test_loader), total=len(test_loader))
     buff_m = torch.zeros(7)
     buff_l = torch.zeros(1)
@@ -97,7 +97,7 @@ def validate():
         metrics = tools.cal_metric(p * 10, t * 10) # Set Depth unit to meter
         buff_m += metrics
 
-        loss = Loss(p, c.unsqueeze(0), batch)
+        loss = Loss(epoch, p, c.unsqueeze(0), batch)
         buff_l += loss.cpu()
 
         val_tqdm.set_description(f"Delta_1 {float(buff_m[0]/i):.3f} | RMS {float(buff_m[3]/i):.3f} | REL {float(buff_m[5]/i):.3f} | loss {float(buff_l/i):.3f}")

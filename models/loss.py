@@ -16,9 +16,9 @@ class Losses(nn.Module):
         self.MML = MinMaxLoss()
         self.LL = LiDAR_Loss()
     
-    def forward(self, output, centers, d_dict):
+    def forward(self, epoch, output, centers, d_dict):
         target = d_dict["depth"]
-        if output.shape[1:] != target.shape[1:]:
+        if output.shape[-2:] != target.shape[-2:]:
             output = F.interpolate(output, [228, 304], mode="nearest")
 
         SIL_loss = self.SILL(output, target)
@@ -26,7 +26,10 @@ class Losses(nn.Module):
         MM_loss = self.MML(centers, target)
         L_loss = self.LL(output, d_dict["lidar"])
 
-        loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * BC_loss + self.cfg.train.gamma * MM_loss
+        if epoch < 10:
+            loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * BC_loss + self.cfg.train.gamma * L_loss
+        else:
+            loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * BC_loss + self.cfg.train.gamma * MM_loss
 
         return loss
 

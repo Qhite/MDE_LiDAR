@@ -7,6 +7,8 @@ import argparse
 from torchvision.transforms.functional import to_pil_image
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def get_config():
     parser = argparse.ArgumentParser(description="Get Config yaml File")
@@ -33,7 +35,7 @@ def update_lr(optim, epoch, cfg):
             param_group['lr'] *= cfg.train.lr_decay
 
 def cal_metric(predict, target):
-    if predict.shape[1:] != target[1:]:
+    if predict.shape[-2:] != target.shape[-2:]:
         predict = F.interpolate(predict, [228, 304], mode="nearest")
     mask_pred = torch.gt(predict, 1e-2)
     mask_gt = torch.gt(target, 1e-2)
@@ -84,3 +86,21 @@ def visualization(data_loader, model, path, device):
             out = to_pil_image((d-p).squeeze())
             plt.imsave(f"{path}/{i}_{j}_er.png", out, cmap="bwr")
         print(f"{i/len(data_loader)*100:2.2f}%",end="\r")
+    
+@torch.no_grad()
+def show_kde(data_loader, model, device):
+    for i, b in enumerate(data_loader):
+        to_device(b, device)
+        o, c = model(b)
+        out = o.flatten().cpu().numpy()
+        cen = c.flatten().cpu().numpy()
+        gt = b["depth"].flatten().cpu().numpy()
+
+        sns.kdeplot(out, color="red", label="predict")
+        # sns.kdeplot(cen, color="green", label="centers")
+        sns.kdeplot(gt, color="blue", label="ground truth")
+        plt.title(f"idx: {i}")
+        plt.legend()
+        plt.pause(1)
+        plt.clf()
+    return
