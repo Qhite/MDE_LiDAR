@@ -101,6 +101,7 @@ def show_kde(data_loader, model, device):
         sns.kdeplot(gt, color="blue", label="ground truth")
         plt.title(f"idx: {i}")
         plt.legend()
+        plt.xlim(0.0, 1.0)
         plt.pause(0.3)
         plt.clf()
     return
