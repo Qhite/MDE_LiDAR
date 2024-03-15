@@ -40,7 +40,7 @@ class DepthNet(nn.Module):
 
         T = 0.9
         bins = self.binning({"feature":f[0], "lidar":y})
-        bins = (bins/T).exp() + 1e-3
+        bins = (bins*T).exp() + 1e-3
         bins = bins / bins.sum(axis=1, keepdim=True)
         
         # Bin Centers
