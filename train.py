@@ -72,9 +72,6 @@ def train():
 
             train_tqdm.set_description(f"Epoch {epoch+1:2d}/{Epochs:2d} | Loss {float(buff_l/i):.3f}")
 
-            if i == len(train_loader)-1 :
-                print(centers[0])
-
         model.eval()
         val_logging = validate(epoch)
 
