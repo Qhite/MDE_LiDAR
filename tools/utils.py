@@ -97,11 +97,12 @@ def show_kde(data_loader, model, device):
         gt = b["depth"].flatten().cpu().numpy()
 
         sns.kdeplot(out, color="red", label="predict")
-        sns.kdeplot(cen, color="green", label="centers")
+        # sns.kdeplot(cen, color="green", label="centers")
         sns.kdeplot(gt, color="blue", label="ground truth")
+        plt.scatter(cen, np.zeros_like(cen), color="green", label="centers")
         plt.title(f"idx: {i}")
         plt.legend()
-        plt.xlim(0.0, 1.0)
+        plt.xlim(0.1, 1.1)
         plt.pause(0.3)
         plt.clf()
     return
