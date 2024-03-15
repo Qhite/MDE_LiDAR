@@ -39,7 +39,8 @@ class DepthNet(nn.Module):
         out = F.softmax(out, dim=1) # Depth bin-probability map
 
         bins = self.binning({"feature":f[0], "lidar":y}) + 1e-3
-        bins = bins / bins.sum(axis=1, keepdim=True) # Min Max Norm
+        bins = bins.exp()
+        bins = bins / bins.sum(axis=1, keepdim=True)
         
         # Bin Centers
         bin_width = F.pad(bins, (1,0), mode="constant", value=1e-3)
