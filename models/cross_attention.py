@@ -43,7 +43,10 @@ class Cross_Attention_Block(nn.Module):
                                   nn.LeakyReLU(),
                                   )
         
-        self.W_o2 = nn.Linear(self.W//2, self.bin_size)
+        self.W_o2 = nn.Sequential(nn.Linear(self.W//2, self.bin_size),
+                                  nn.LeakyReLU(),
+                                  )
+        
 
     def forward(self, data_dict):
         x, y = data_dict["feature"], data_dict["lidar"]

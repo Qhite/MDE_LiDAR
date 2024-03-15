@@ -76,14 +76,14 @@ def visualization(data_loader, model, path, device):
         predict, centers = model(batch)
         for j, (p, d) in enumerate(zip(predict, batch["depth"])):
             p = F.interpolate(p.unsqueeze(0), size=[228, 304], mode="nearest")
-            out = to_pil_image(p.squeeze())
-            plt.imsave(f"{path}/{i}_{j}_pr.png", out, cmap="magma")
+            out = p.cpu().squeeze()
+            plt.imsave(f"{path}/{i}_{j}_pr.png", out, cmap="magma", vmin=d.min(), vmax=d.max())
 
             d = F.interpolate(d.unsqueeze(0), size=[228, 304], mode="nearest")
-            out = to_pil_image(d.squeeze())
-            plt.imsave(f"{path}/{i}_{j}_gt.png", out, cmap="magma")
+            out = d.cpu().squeeze()
+            plt.imsave(f"{path}/{i}_{j}_gt.png", out, cmap="magma", vmin=d.min(), vmax=d.max())
 
-            out = to_pil_image((d-p).squeeze())
+            out = (p-d).cpu().squeeze()
             plt.imsave(f"{path}/{i}_{j}_er.png", out, cmap="bwr")
         print(f"{i/len(data_loader)*100:2.2f}%",end="\r")
     
@@ -97,12 +97,12 @@ def show_kde(data_loader, model, device):
         gt = b["depth"].flatten().cpu().numpy()
 
         sns.kdeplot(out, color="red", label="predict")
-        # sns.kdeplot(cen, color="green", label="centers")
+        sns.kdeplot(cen, color="green", label="centers")
         sns.kdeplot(gt, color="blue", label="ground truth")
-        plt.scatter(cen, np.zeros_like(cen), color="green", label="centers")
+        plt.scatter(cen, np.zeros_like(cen), color="green", s=2, label="centers")
         plt.title(f"idx: {i}")
         plt.legend()
-        plt.xlim(0.1, 1.1)
-        plt.pause(0.3)
+        plt.xlim(-0.1, 1.1)
+        plt.pause(0.7)
         plt.clf()
     return
