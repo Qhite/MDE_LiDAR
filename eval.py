@@ -37,7 +37,7 @@ if __name__ == "__main__":
         o, c = model(b)
         break
 
-    # tools.show_kde(test_loader, model, cfg.device)
+    tools.show_kde(test_loader, model, cfg.device)
     
-    path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}-eval"
-    tools.visualization(test_loader, model, path, cfg.device)
+    # path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}-eval"
+    # tools.visualization(test_loader, model, path, cfg.device)
