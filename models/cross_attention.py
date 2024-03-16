@@ -44,7 +44,7 @@ class Cross_Attention_Block(nn.Module):
                                   )
         
         self.W_o2 = nn.Sequential(nn.Linear(self.W//2, self.bin_size),
-                                  nn.LeakyReLU(),
+                                  nn.ReLU(),
                                   )
         
 

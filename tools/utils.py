@@ -99,7 +99,6 @@ def show_kde(data_loader, model, device):
         sns.kdeplot(out, color="red", label="predict")
         sns.kdeplot(cen, color="green", label="centers")
         sns.kdeplot(gt, color="blue", label="ground truth")
-        plt.scatter(cen, np.zeros_like(cen), color="green", s=2, label="centers")
         plt.title(f"idx: {i}")
         plt.legend()
         plt.xlim(-0.1, 1.1)

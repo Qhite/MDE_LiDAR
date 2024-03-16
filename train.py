@@ -101,8 +101,8 @@ def validate(epoch):
         buff_l += loss.cpu()
 
         val_tqdm.set_description(f"Delta_1 {float(buff_m[0]/i):.3f} | RMS {float(buff_m[3]/i):.3f} | REL {float(buff_m[5]/i):.3f} | loss {float(buff_l/i):.3f}")
-        if i == len(test_loader)-1:
-            print(c)
+        # if i == len(test_loader)-1:
+        #     print(c)
     
     avg_loss = (buff_l/len(test_loader)).tolist()
     avg_errors = (buff_m/len(test_loader)).tolist()
