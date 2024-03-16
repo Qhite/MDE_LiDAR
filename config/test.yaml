@@ -6,14 +6,14 @@ data:
 
 model:
   backbone: "efficientnetb0"
-  bin_size: 128
+  bin_size: 256
   decoder_type: 0 # 0-Trans Conv / 1-Interpolate
   decoder_dim: 16
   num_head: 8
   emb_dim: 128
 
 train: # Adam Optimizer
-  tag: "exp-temp-bin+reverse_LGO"
+  tag: "exp_temp_bins"
   batch_size: 40
   epochs: 20
   lr: 0.0005
