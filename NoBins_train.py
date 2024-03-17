@@ -37,7 +37,7 @@ optimizer = torch.optim.Adam([{"params": model.encoder.parameters(), "lr": cfg.t
                              )
 
 # Loss Funtions
-SILL = models.SILogLoss().to(device=cfg.device)
+SILL = models.loss.SILogLoss().to(device=cfg.device)
 
 # Show Configs
 tools.show_cfg(cfg, model)
