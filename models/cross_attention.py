@@ -40,7 +40,7 @@ class Cross_Attention_Block(nn.Module):
         # Output
         self.W_o1 = nn.Sequential(nn.BatchNorm2d(1),
                                   nn.Linear(self.d_model, self.W//2),
-                                  nn.ReLU(),
+                                  nn.LeakyReLU(),
                                   )
         
         self.W_o2 = nn.Sequential(nn.Linear(self.W//2, self.bin_size),
