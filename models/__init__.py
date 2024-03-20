@@ -1,7 +1,7 @@
 import torchvision
 from .model import DepthNet, DepthNet_Nobins
 from .cross_attention import Cross_Attention_Block
-from .decoder import Decoder, Decoder_Inter
+from .decoder import Decoder, Decoder_Inter, Decoder_concat
 from .loss import Losses
 
 __model_info__ = {
@@ -26,5 +26,7 @@ def get_model(backbone):
 def sel_decoder(cfg, info):
     if cfg.model.decoder_type == 0:
         return Decoder(cfg, info)
+    elif cfg.model.decoder_type == 2:
+        return Decoder_concat(cfg, info)
     else:
         return Decoder_Inter(cfg, info)
