@@ -19,10 +19,10 @@ class Cross_Attention_Block(nn.Module):
         self.H, self.W = [228, 304]
 
         self.Conv = nn.Sequential(                                                          
-            nn.Conv2d(feature_dim[-1], feature_dim[-1], kernel_size=3, stride=2, padding=1, bias=False), # depth-wise
-            nn.BatchNorm2d(feature_dim[-1]),
+            nn.Conv2d(feature_dim[-2], feature_dim[-2], kernel_size=3, stride=2, padding=1, bias=False), # depth-wise
+            nn.BatchNorm2d(feature_dim[-2]),
             nn.LeakyReLU(),
-            nn.Conv2d(feature_dim[-1], 1, kernel_size=3, stride=1, padding=1, bias=False), # point-wise
+            nn.Conv2d(feature_dim[-2], 1, kernel_size=3, stride=1, padding=1, bias=False), # point-wise
             nn.BatchNorm2d(1),
             nn.LeakyReLU(),
         )
@@ -33,7 +33,7 @@ class Cross_Attention_Block(nn.Module):
         )
 
         # Q, K, V Linear layers
-        self.W_q = nn.Linear(self.W//4, self.d_model, bias=False)
+        self.W_q = nn.Linear(self.W//8, self.d_model, bias=False) # self.W//4
         self.W_k = nn.Linear(self.W//4, self.d_model, bias=False)
         self.W_v = nn.Linear(self.W//4, self.d_model, bias=False)
 
@@ -51,7 +51,7 @@ class Cross_Attention_Block(nn.Module):
     def forward(self, data_dict):
         x, y = data_dict["feature"], data_dict["lidar"]
         batch_size = x.size(0)
-        position = Positional_encoding(batch_size, self.H//4, self.d_model).to(x.device)
+        position = Positional_encoding(batch_size, 29, self.d_model).to(x.device) #self.H//2
         x = self.Conv(x) + position
         y = self.Linear(y)
 
@@ -71,7 +71,7 @@ class Cross_Attention_Block(nn.Module):
         Concate_Attention_Value = Attention_Value.transpose(1, 2).contiguous().view(batch_size, -1, self.d_model)
         Q_res = (Q.transpose(1,2).view(batch_size, -1, self.num_head * self.head_dim))
         res = Concate_Attention_Value + Q_res
-        output = F.avg_pool2d(self.W_o1(res.unsqueeze(1)), (self.H//4, 1)).view(batch_size, -1)
+        output = F.avg_pool2d(self.W_o1(res.unsqueeze(1)), (29, 1)).view(batch_size, -1) # self.H//4
         output = self.W_o2(output)
 
         return output
