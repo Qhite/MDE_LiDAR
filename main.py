@@ -16,8 +16,8 @@ class model_banch(nn.Module):
                 "lidar":torch.rand([1,1,cfg.data.lidar_size]).to(cfg.device)}
         out = self.model(data)
 
-cfg = cfg = tools.get_attr("/root/MDE_LiDAR/config/baseline.yaml")
-# cfg = cfg = tools.get_attr("/root/MDE_LiDAR/config/test.yaml")
+# cfg = cfg = tools.get_attr("/root/MDE_LiDAR/config/baseline.yaml")
+cfg = cfg = tools.get_attr("/root/MDE_LiDAR/config/model_3.yaml")
 
 model = models.DepthNet(cfg).to(cfg.device)
 # model = models.DepthNet_Nobins(cfg).to(cfg.device)
