@@ -10,7 +10,8 @@ class DepthNet(nn.Module):
         # Build Model
         self.model, self.info = models.get_model(cfg.model.backbone)
         self.encoder = self.model.get_submodule("features")
-        self.binning = models.Cross_Attention_Block(cfg, self.info[1])
+        # self.binning = models.Cross_Attention_Block(cfg, self.info[1])
+        self.binning = models.CA_Block(cfg, self.info[1])
         self.decoder = models.sel_decoder(cfg, self.info[1])
 
         # Decoder Output Conv

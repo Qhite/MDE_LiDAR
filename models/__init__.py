@@ -1,6 +1,6 @@
 import torchvision
 from .model import DepthNet, DepthNet_Nobins
-from .cross_attention import Cross_Attention_Block
+from .cross_attention import Cross_Attention_Block, CA_Block
 from .decoder import Decoder, Decoder_Inter, Decoder_concat
 from .loss import Losses
 
