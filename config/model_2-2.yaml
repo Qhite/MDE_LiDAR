@@ -8,12 +8,12 @@ model:
   backbone: "efficientnetb0"
   bin_size: 128
   decoder_type: 0 # 0-Concat / 1-Add
-  decoder_dim: 8
+  decoder_dim: 16
   num_head: 8
-  emb_dim: 64
+  emb_dim: 128
 
 train: # Adam Optimizer
-  tag: "small"
+  tag: "bin_medium"
   batch_size: 40
   epochs: 20
   lr: 0.0005
@@ -23,6 +23,3 @@ train: # Adam Optimizer
   alpha: 10.0
   beta: 0.1
   gamma: 0.1
-
-# FLOPs: 2.42G
-# MACs: 1.17G
