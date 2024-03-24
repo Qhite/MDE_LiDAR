@@ -12,7 +12,7 @@ class Cross_Attention_Block(nn.Module):
         self.bin_size = cfg.model.bin_size
         self.H, self.W = [228, 304]
 
-        set_feature = 1
+        set_feature = 2
         f_channel = feature_dim[-set_feature-1]
 
         self.Conv = nn.Sequential(
