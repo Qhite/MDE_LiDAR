@@ -6,7 +6,7 @@ data:
 
 model:
   backbone: "efficientnetb0"
-  bin_size: 512
+  bin_size: 300
   decoder_type: 0 # 0-Concat / 1-Add
   decoder_dim: 16
   num_head: 8
@@ -14,7 +14,7 @@ model:
 
 train: # Adam Optimizer
   tag: "bin_big"
-  batch_size: 40
+  batch_size: 23
   epochs: 20
   lr: 0.0005
   lr_decay: 0.1
