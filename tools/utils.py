@@ -16,15 +16,6 @@ def get_config():
     parser.add_argument("--config", required=True)
     return parser.parse_args()
 
-def init_weights(layers):
-    if isinstance(layers, nn.Conv2d):
-        nn.init.kaiming_normal_(layers.weight)
-    elif isinstance(layers, nn.Linear):
-        nn.init.kaiming_normal_(layers.weight)
-    elif isinstance(layers, nn.BatchNorm2d):
-        nn.init.constant_(layers.weight, 1)
-        nn.init.constant_(layers.bias, 0)
-
 def to_device(data_dict, device):
     for k in data_dict.keys():
         data_dict[k] = data_dict[k].to(device=device)
