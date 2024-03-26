@@ -1,0 +1,25 @@
+device: 0
+
+data:
+  image_size: [228, 304]
+  lidar_size: 70
+
+model:
+  backbone: "efficientnetb0"
+  bin_size: 64
+  decoder_type: 0 # 0-Concat / 1-Add
+  decoder_dim: 16
+  num_head: 8
+  emb_dim: 128
+
+train: # Adam Optimizer
+  tag: "baseline"
+  batch_size: 23
+  epochs: 20
+  lr: 0.0005
+  lr_decay: 0.1
+  decay_epoch: [10]
+  weight_decay: 0.0005
+  alpha: 10.0
+  beta: 0.1
+  gamma: 0.1

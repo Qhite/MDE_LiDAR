@@ -6,7 +6,7 @@ data:
 
 model:
   backbone: "efficientnetb0"
-  bin_size: 256
+  bin_size: 64
   decoder_type: 0 # 0-Concat / 1-Add
   decoder_dim: 16
   num_head: 8
