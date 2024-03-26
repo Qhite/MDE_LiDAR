@@ -21,11 +21,11 @@ class Cross_Attention_Block(nn.Module):
         )
 
         # Positional Encoding
-        pe_h = math.ceil(self.H//pow(2, set_feature+1))+1
+        pe_h = math.ceil(self.H/pow(2, set_feature+1))
         self.PE = nn.Parameter(torch.rand(pe_h, 1), requires_grad=True)
 
         # Q, K, V Linear layers
-        feat_w = math.ceil(self.W//pow(2, set_feature+1))
+        feat_w = math.ceil(self.W/pow(2, set_feature+1))
         self.W_q = nn.Linear(feat_w, self.d_model, bias=False)
         self.W_k = nn.Linear(cfg.data.lidar_size, self.d_model, bias=False)
         self.W_v = nn.Linear(cfg.data.lidar_size, self.d_model, bias=False)

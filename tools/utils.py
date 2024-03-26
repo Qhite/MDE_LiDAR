@@ -88,7 +88,7 @@ def show_kde(data_loader, model, device):
         gt = b["depth"].flatten().cpu().numpy()
 
         sns.kdeplot(out, bw_adjust=1.5, color="red", label="predict")
-        sns.kdeplot(cen, bw_adjust=0.3, color="green", label="centers")
+        # sns.kdeplot(cen, bw_adjust=0.3, color="green", label="centers")
         sns.kdeplot(gt, bw_adjust=1.5, color="blue", label="ground truth")
         plt.title(f"idx: {i}")
         plt.legend()

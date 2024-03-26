@@ -3,6 +3,7 @@ import models
 import dataloaders
 import tools
 import os
+from tqdm import tqdm
 
 # Get Trained File Path
 args = tools.get_config()
@@ -34,7 +35,7 @@ if __name__ == "__main__":
 
     buff = torch.zeros(7)
 
-    for i, b in enumerate(test_loader):
+    for i, b in enumerate(tqdm(test_loader)):
         tools.to_device(b, cfg.device)
         d = b["depth"]
         o, _ = model(b)
@@ -42,7 +43,7 @@ if __name__ == "__main__":
         buff += m
     tools.show_metric(buff/len(test_loader))
 
-    # tools.show_kde(test_loader, model, cfg.device)
+    tools.show_kde(test_loader, model, cfg.device)
     
     # path = f"{root_path}/output/{config_yaml[:-5]}-{cfg.train.tag}-eval"
     # tools.visualization(test_loader, model, path, cfg.device)
