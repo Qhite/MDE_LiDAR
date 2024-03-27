@@ -195,29 +195,28 @@ class Normalize(object):
         return {'image': image, 'depth': depth, 'lidar': lidar}
 
 class Add_LiDAR(object):
-    def __init__(self, lp, offset=0, noise=None):
+    def __init__(self, lp, channel=1, channel_offset=2, offset=0):
         self.lp = lp
+        self.channel = channel
+        self.c_offset = channel_offset
         self.offset = offset
-        self.noise = noise
         pass
     
     def __call__(self, data):
         image, depth = data['image'], data['depth']
-        mid_idx = depth.size(2)//2 + self.offset
-
-        if self.noise != None:
-            masked = depth[0, mid_idx-self.noise:mid_idx+self.noise+1, :].transpose(1, 0).contiguous()
-            mid = []
-            for m in masked:
-                mid.append( m[np.random.randint(0, self.noise*2+1)] )
-            mid = torch.tensor(mid).squeeze()
+        mid_idx = depth.size(1)//2 + self.offset
+        
+        if self.channel == 1:
+            mid = depth[:, mid_idx, :]
         else:
-            mid = depth[:, mid_idx, :].squeeze()
-
+            sp = int(self.c_offset * (self.channel - 1) / 2)
+            ep = int(self.c_offset * (self.channel - 1) / 2) + self.c_offset
+            mid = depth[:, mid_idx-sp:mid_idx+ep:self.c_offset, :].squeeze()
+        
         if depth.size(-1) > self.lp:
-            stride = mid.size(0) // self.lp
-            pad = mid.size(0) % self.lp
-            mid = mid[pad//2 : -pad//2 : stride].unsqueeze(0)
+            stride = mid.size(-1) // self.lp
+            pad = mid.size(-1) % self.lp
+            mid = mid[:, pad//2 : -pad//2 : stride]
         else:
             raise("Too many LiDAR Points!")
         

@@ -2,19 +2,19 @@ device: 0
 
 data:
   image_size: [228, 304]
-  lidar_size: 70
+  lidar_size: [1, 70]
 
 model:
   backbone: "efficientnetb0"
-  bin_size: 64
+  bin_size: 256
   decoder_type: 0 # 0-Concat / 1-Add
-  decoder_dim: 16
-  num_head: 8
+  decoder_dim: 8
+  num_head: 1
   emb_dim: 128
 
 train: # Adam Optimizer
   tag: "baseline"
-  batch_size: 40
+  batch_size: 20
   epochs: 20
   lr: 0.0005
   lr_decay: 0.1

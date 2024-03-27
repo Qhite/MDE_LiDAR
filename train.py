@@ -23,8 +23,8 @@ cfg = tools.get_attr(f"{root_path}/MDE_LiDAR/config/{config_yaml}") # Load Train
 model = models.DepthNet(cfg).to(device=cfg.device)
 
 # Dataload
-train_loader = dataloaders.getTrain_Data(batch_size=cfg.train.batch_size, root_path=root_path, lp=cfg.data.lidar_size)
-test_loader = dataloaders.getTest_Data(batch_size=1, root_path=root_path, lp=cfg.data.lidar_size)
+train_loader = dataloaders.getTrain_Data(batch_size=cfg.train.batch_size, root_path=root_path, lp=cfg.data.lidar_size[-1], channel=cfg.data.lidar_size[0])
+test_loader = dataloaders.getTest_Data(batch_size=1, root_path=root_path, lp=cfg.data.lidar_size[-1], channel=cfg.data.lidar_size[0])
 
 # Optimizer
 enc = list(map(id, model.encoder.parameters()))

@@ -35,8 +35,9 @@ with torch.no_grad():
 test_loader = dataloaders.getTest_Data(batch_size=1, root_path="/root", lp=cfg.data.lidar_size)
 train_loader = dataloaders.getTrain_Data(batch_size=cfg.train.batch_size, root_path="/root", lp=cfg.data.lidar_size)
 
-for batch in tqdm(test_loader):
+for batch in tqdm(train_loader):
     tools.to_device(batch, cfg.device)
 
-    out = model(batch)
-    break
+    out,c = model(batch)
+    print(c.size())
+    # break

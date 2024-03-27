@@ -21,14 +21,14 @@ class Cross_Attention_Block(nn.Module):
         )
 
         # Positional Encoding
-        pe_h = math.ceil(self.H/pow(2, set_feature+1))
+        pe_h = math.ceil(self.H/pow(2, set_feature+1)) + 1
         self.PE = nn.Parameter(torch.rand(pe_h, 1), requires_grad=True)
 
         # Q, K, V Linear layers
         feat_w = math.ceil(self.W/pow(2, set_feature+1))
         self.W_q = nn.Linear(feat_w, self.d_model, bias=False)
-        self.W_k = nn.Linear(cfg.data.lidar_size, self.d_model, bias=False)
-        self.W_v = nn.Linear(cfg.data.lidar_size, self.d_model, bias=False)
+        self.W_k = nn.Linear(cfg.data.lidar_size[-1], self.d_model, bias=False)
+        self.W_v = nn.Linear(cfg.data.lidar_size[-1], self.d_model, bias=False)
 
         # Output
         self.W_o = nn.Sequential(nn.Linear(self.d_model, 128),
@@ -43,7 +43,7 @@ class Cross_Attention_Block(nn.Module):
         batch_size = x.size(0)
 
         x = self.Conv(x)
-        x = F.pad(x, (0,0,0,1))# + self.PE # Add Token at the end
+        x = F.pad(x, (0,0,0,1)) + self.PE # Add Token at the end + Positional Encoding
 
         # Q, K, V Linear Projection
         Q = self.W_q(x).view(batch_size, -1, self.num_head, self.head_dim).transpose(1, 2)

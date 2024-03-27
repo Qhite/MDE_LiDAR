@@ -34,7 +34,7 @@ class NYUDv2_dataset(Dataset):
 
 # DataLoader
 
-def getTrain_Data(batch_size, root_path, lp):
+def getTrain_Data(batch_size, root_path, lp, channel=1):
     __imagenet_pca = {
         'eigval': torch.Tensor([0.2175, 0.0188, 0.0045]), 
         'eigvec': torch.Tensor([ [-0.5675,  0.7192,  0.4009], 
@@ -52,7 +52,7 @@ def getTrain_Data(batch_size, root_path, lp):
         Lighting(0.1, __imagenet_pca['eigval'], __imagenet_pca['eigvec']),
         ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4,),
         Normalize(__imagenet_stats["mean"], __imagenet_stats["std"]),
-        Add_LiDAR(lp, 0, 10)
+        Add_LiDAR(lp, channel, channel_offset=2, offset=0)
     ])
 
     transform_train = NYUDv2_dataset(root_path=root_path, datalist_file="train", transform=pre_process)
@@ -61,7 +61,7 @@ def getTrain_Data(batch_size, root_path, lp):
         
     return dataloader_train
 
-def getTest_Data(batch_size, root_path, lp):
+def getTest_Data(batch_size, root_path, lp, channel=1):
 
     __imagenet_stats = {'mean': [0.485, 0.456, 0.406],
                         'std': [0.229, 0.224, 0.225]}
@@ -71,7 +71,7 @@ def getTest_Data(batch_size, root_path, lp):
         CenterCrop(),
         ToTensor(is_test=True),
         Normalize(__imagenet_stats["mean"], __imagenet_stats["std"]),
-        Add_LiDAR(lp)
+        Add_LiDAR(lp, channel, channel_offset=2, offset=0)
     ])
 
     transform_test = NYUDv2_dataset(root_path=root_path, datalist_file="test", transform=pre_process)

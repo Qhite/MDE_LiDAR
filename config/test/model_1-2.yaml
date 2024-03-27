@@ -9,11 +9,11 @@ model:
   bin_size: 64
   decoder_type: 0 # 0-Concat / 1-Add
   decoder_dim: 12
-  num_head: 16
-  emb_dim: 128
+  num_head: 8
+  emb_dim: 64
 
 train: # Adam Optimizer
-  tag: "medium_baseline"
+  tag: "medium"
   batch_size: 23
   epochs: 20
   lr: 0.0005

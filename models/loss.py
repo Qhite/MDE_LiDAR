@@ -14,7 +14,6 @@ class Losses(nn.Module):
         self.SILL = SILogLoss()
         self.BCL = BinsChamferLoss()
         self.MML = MinMaxLoss()
-        self.LL = LiDAR_Loss()
     
     def forward(self, epoch, output, centers, d_dict):
         target = d_dict["depth"]
@@ -24,7 +23,6 @@ class Losses(nn.Module):
         SIL_loss = self.SILL(output, target)
         BC_loss = self.BCL(centers, target)
         MM_loss = self.MML(centers, target)
-        L_loss = self.LL(output, d_dict["lidar"])
 
         if epoch < 10:
             loss = self.cfg.train.alpha * SIL_loss + self.cfg.train.beta * BC_loss #+ self.cfg.train.gamma * MM_loss
@@ -87,23 +85,3 @@ class MinMaxLoss(nn.Module):
         maxT = T.max(dim=1)[0]
         minT = T.min(dim=1)[0]
         return torch.abs(centers[:,-1] - maxT).sum() + torch.abs(centers[:,0] - minT).sum()
-    
-class LiDAR_Loss(nn.Module):
-    def __init__(self):
-        super(LiDAR_Loss, self).__init__()
-    
-    def forward(self, output, lidar):
-        batch_size = output.shape[0]
-
-        mid_idx = output.shape[2]
-        mid = output[:, :, mid_idx-3:mid_idx+4, :]
-        mid = F.avg_pool2d(mid, 3, 1).squeeze()
-        ld = lidar.squeeze()
-
-        if batch_size == 1:
-            mid = mid.unsqueeze(0)
-            ld = ld.unsqueeze(0)
-
-        loss, _ = chamfer_distance(x=ld.unsqueeze(2), y=mid.unsqueeze(2))
-
-        return loss
