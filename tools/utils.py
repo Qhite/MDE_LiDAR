@@ -66,13 +66,13 @@ def visualization(data_loader, model, path, device):
         to_device(batch, device)
         predict, centers = model(batch)
         for j, (p, d) in enumerate(zip(predict, batch["depth"])):
-            p = F.interpolate(p.unsqueeze(0), size=[228, 304], mode="nearest")
-            out = p.cpu().squeeze()
-            plt.imsave(f"{path}/{i}_{j}_pr.png", out, cmap="magma", vmin=d.min(), vmax=d.max())
-
             d = F.interpolate(d.unsqueeze(0), size=[228, 304], mode="nearest")
             out = d.cpu().squeeze()
             plt.imsave(f"{path}/{i}_{j}_gt.png", out, cmap="magma", vmin=d.min(), vmax=d.max())
+
+            p = F.interpolate(p.unsqueeze(0), size=[228, 304], mode="nearest")
+            out = p.cpu().squeeze()
+            plt.imsave(f"{path}/{i}_{j}_pr.png", out, cmap="magma", vmin=d.min(), vmax=d.max())
 
             out = (p-d).cpu().squeeze()
             plt.imsave(f"{path}/{i}_{j}_er.png", out, cmap="bwr")
