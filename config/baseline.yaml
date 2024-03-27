@@ -9,7 +9,7 @@ model:
   bin_size: 256
   decoder_type: 0 # 0-Concat / 1-Add
   decoder_dim: 8
-  num_head: 1
+  num_head: 4
   emb_dim: 128
 
 train: # Adam Optimizer
